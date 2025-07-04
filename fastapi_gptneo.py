@@ -4,7 +4,7 @@ from transformers import pipeline
 
 app = FastAPI()
 
-summarizer = pipeline("text-generation", model="EleutherAI/gpt-neo-1.3B")
+ssummarizer = pipeline("text-generation", model="gpt2")
 
 class SummarizeRequest(BaseModel):
     text: str
