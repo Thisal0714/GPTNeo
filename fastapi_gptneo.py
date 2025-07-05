@@ -9,7 +9,7 @@ import os
 app = FastAPI()
 
 # Read token from env variable (best practice!)
-HF_API_TOKEN = os.getenv("HF_API_TOKEN")
+HF_API_TOKEN = "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"
 API_URL = "https://api-inference.huggingface.co/models/gpt2"
 
 headers = {
