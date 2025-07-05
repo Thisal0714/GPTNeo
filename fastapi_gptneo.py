@@ -13,7 +13,7 @@ HF_API_TOKEN = "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"
 API_URL = "https://api-inference.huggingface.co/models/gpt2"
 
 headers = {
-    "Authorization": f"Bearer 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"
+    "Authorization": "Bearer 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"
 }
 
 class TextRequest(BaseModel):
