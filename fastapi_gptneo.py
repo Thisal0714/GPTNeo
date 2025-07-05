@@ -23,10 +23,14 @@ class TextRequest(BaseModel):
 def generate_text(req: TextRequest):
     payload = {"inputs": req.prompt}
     response = requests.post(API_URL, headers=headers, json=payload)
-
-    if response.status_code != 200:
-        return {"error": response.json()}
     
-    generated = response.json()[0]["generated_text"]
+    res_json = response.json()
+    
+    # Check if response contains error key
+    if "error" in res_json:
+        return {"error": res_json["error"]}
+    
+    generated = res_json[0]["generated_text"]
     return {"result": generated}
+
 
