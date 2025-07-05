@@ -1,16 +1,32 @@
-from fastapi import FastAPI
+
+
+# fastapi_gptneo.py
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
-from transformers import pipeline
+import requests
+import os
 
 app = FastAPI()
 
-summarizer = pipeline("text-generation", model="gpt2")
+# Read token from env variable (best practice!)
+HF_API_TOKEN = os.getenv("HF_API_TOKEN")
+API_URL = "https://api-inference.huggingface.co/models/gpt2"
 
-class SummarizeRequest(BaseModel):
-    text: str
+headers = {
+    "Authorization": f"Bearer {HF_API_TOKEN}"
+}
 
-@app.post("/summarize")
-async def summarize(req: SummarizeRequest):
-    prompt = f"Summarize the following content in bullet points:\n{req.text}"
-    result = summarizer(prompt, max_length=150, do_sample=True, temperature=0.7)
-    return {"summary": result[0]['generated_text']}
+class TextRequest(BaseModel):
+    prompt: str
+
+@app.post("/generate")
+def generate_text(req: TextRequest):
+    payload = {"inputs": req.prompt}
+    response = requests.post(API_URL, headers=headers, json=payload)
+
+    if response.status_code != 200:
+        return {"error": response.json()}
+    
+    generated = response.json()[0]["generated_text"]
+    return {"result": generated}
+
